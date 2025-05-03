@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ทดสอบการส่งข้อมูลไปยัง Telegram</title>
+    <style>
+        body {
+            font-family: 'Kanit', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ทดสอบการส่งข้อมูลไปยัง Telegram</h1>
+        
+        <form id="test-form">
+            <div class="form-group">
+                <label for="name">ชื่อ:</label>
+                <input type="text" id="name" name="name" value="ทดสอบระบบ" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">ข้อความ:</label>
+                <textarea id="message" name="message" rows="4" required>นี่คือข้อความทดสอบจาก KSP Thai Logistics</textarea>
+            </div>
+            
+            <button type="submit">ส่งข้อความทดสอบ</button>
+        </form>
+        
+        <div class="result" id="result-container" style="display:none;">
+            <h2>ผลลัพธ์:</h2>
+            <pre id="result"></pre>
+        </div>
+    </div>
+
+    <script>
+        // ค่าสำหรับทดสอบ
+        const TELEGRAM_BOT_TOKEN = '7992354555:AAFm96-DSMUK9ayG7f92xwCIfxMcmnAF_hE';
+        const TELEGRAM_CHAT_ID = '7596659509';
+        
+        // ฟังก์ชันสำหรับส่งข้อความไปยัง Telegram
+        async function sendToTelegram(message) {
+            try {
+                const resultElement = document.getElementById('result');
+                resultElement.innerHTML += `กำลังส่งข้อความไปยัง Telegram...\n`;
+                
+                // URL สำหรับ Telegram Bot API
+                const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+                resultElement.innerHTML += `URL: ${telegramApiUrl}\n`;
+                
+                // ข้อมูลที่จะส่ง
+                const data = {
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML'
+                };
+                
+                resultElement.innerHTML += `ข้อมูล: ${JSON.stringify(data)}\n\n`;
+                
+                // ส่งข้อมูล
+                const response = await fetch(telegramApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                resultElement.innerHTML += `HTTP Status: ${response.status}\n`;
+                
+                const responseData = await response.json();
+                resultElement.innerHTML += `ข้อมูลตอบกลับ: ${JSON.stringify(responseData)}\n`;
+                
+                if (!response.ok) {
+                    throw new Error(`ไม่สามารถส่งข้อมูลไปยัง Telegram ได้: ${responseData.description || response.statusText}`);
+                }
+                
+                resultElement.innerHTML += `\nการส่งข้อความสำเร็จ! ✅`;
+                return responseData;
+            } catch (error) {
+                const resultElement = document.getElementById('result');
+                resultElement.innerHTML += `\nเกิดข้อผิดพลาด: ${error.message} ❌`;
+                throw error;
+            }
+        }
+        
+        document.getElementById('test-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const resultContainer = document.getElementById('result-container');
+            const resultElement = document.getElementById('result');
+            resultContainer.style.display = 'block';
+            resultElement.innerHTML = '';
+            
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+            
+            const formattedMessage = `<b>ผู้ส่ง:</b> ${name}\n<b>ข้อความ:</b> ${message}`;
+            
+            sendToTelegram(formattedMessage)
+                .then(() => {
+                    // ส่งสำเร็จ - ไม่ต้องทำอะไรเพิ่ม (แสดงใน result แล้ว)
+                })
+                .catch(error => {
+                    console.error('เกิดข้อผิดพลาด:', error);
+                    // แสดงข้อผิดพลาดใน result แล้ว
+                });
+        });
+    </script>
+</body>
+</html>

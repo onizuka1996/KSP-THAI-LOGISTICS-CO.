@@ -2,14 +2,14 @@
 
 // กำหนดค่า Telegram Bot Token และ Chat ID
 // ต้องสร้าง Bot ใน Telegram ผ่าน BotFather และรับ Token มาใส่ที่นี่
-const TELEGRAM_BOT_TOKEN = '7992354555:AAFm96-DSMUK9ayG7f92xwCIfxMcmnAF_hE'; // เปลี่ยนเป็น Token ของคุณ
-const TELEGRAM_CHAT_ID = '7596659509';     // เปลี่ยนเป็น Chat ID ของคุณ
+const TELEGRAM_BOT_TOKEN = '6971329632:AAHo7hJ2uZDKIGnH4tBl3AoNHH-kezjRtik'; // เปลี่ยนเป็น Token ของคุณ
+const TELEGRAM_CHAT_ID = '1022465378';     // เปลี่ยนเป็น Chat ID ของคุณ
 
 // ฟังก์ชันสำหรับการส่งข้อความไปยัง Telegram
 async function sendToTelegram(message) {
     try {
-        console.log('กำลังส่งข้อมูลไปยัง Telegram:', message);
-        console.log('Token:', TELEGRAM_BOT_TOKEN);
+        console.log('กำลังส่งข้อมูลไปยัง Telegram:', message.substring(0, 100) + '...');
+        console.log('Token:', TELEGRAM_BOT_TOKEN.substring(0, 10) + '...');
         console.log('Chat ID:', TELEGRAM_CHAT_ID);
         
         // ตรวจสอบ token และ chat_id
@@ -23,6 +23,7 @@ async function sendToTelegram(message) {
 
         // URL สำหรับ Telegram Bot API
         const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        console.log('กำลังส่งไปยัง URL:', telegramApiUrl);
         
         // ข้อมูลที่จะส่งไปยัง Telegram
         const data = {
@@ -31,23 +32,40 @@ async function sendToTelegram(message) {
             parse_mode: 'HTML'
         };
         
-        // ส่งข้อมูลด้วย fetch API
-        const response = await fetch(telegramApiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
+        console.log('ข้อมูลที่จะส่ง: chat_id=' + TELEGRAM_CHAT_ID + ', ความยาวข้อความ=' + message.length + ' ตัวอักษร');
         
-        const responseData = await response.json();
-        console.log('ข้อมูลตอบกลับจาก Telegram:', responseData);
-        
-        if (!response.ok) {
-            throw new Error(`ไม่สามารถส่งข้อมูลไปยัง Telegram ได้: ${responseData.description || response.statusText}`);
+        // ทำให้แน่ใจว่ามีการส่งข้อมูลจริงๆ
+        try {
+            // ส่งข้อมูลด้วย fetch API
+            console.log('กำลังเริ่ม fetch ไปยัง Telegram API');
+            const response = await fetch(telegramApiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            console.log('ได้รับการตอบกลับ HTTP Status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Telegram API error:', errorText);
+                throw new Error(`HTTP error ${response.status}: ${errorText}`);
+            }
+            
+            const responseData = await response.json();
+            console.log('ข้อมูลตอบกลับจาก Telegram:', JSON.stringify(responseData));
+            
+            if (!responseData.ok) {
+                throw new Error(`Telegram API รายงานว่าเกิดข้อผิดพลาด: ${responseData.description}`);
+            }
+            
+            return responseData;
+        } catch (fetchError) {
+            console.error('Fetch error:', fetchError);
+            throw new Error(`ไม่สามารถเชื่อมต่อกับ Telegram API ได้: ${fetchError.message}`);
         }
-        
-        return responseData;
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Telegram:', error);
         // แสดง alert เพื่อให้ผู้ใช้รู้ว่ามีข้อผิดพลาด
