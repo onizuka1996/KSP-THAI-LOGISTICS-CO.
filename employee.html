@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สำหรับพนักงาน - KSP THAI LOGISTICS CO., LTD</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/fix-encoding.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>KSP THAI LOGISTICS CO., LTD</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">หน้าหลัก</a></li>
+                    <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                    <li><a href="services.html">บริการ</a></li>
+                    <li><a href="careers.html">ร่วมงานกับเรา</a></li>
+                    <li><a href="contact.html">ติดต่อเรา</a></li>
+                    <li><a href="employee.html" class="employee-btn active">สำหรับพนักงาน</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-banner">
+        <div class="container">
+            <h2>พื้นที่สำหรับพนักงาน</h2>
+            <p>ระบบจัดการสำหรับพนักงาน KSP THAI LOGISTICS</p>
+        </div>
+    </section>
+
+    <section class="employee-portal">
+        <div class="container">
+            <div class="portal-grid">
+                <div class="portal-card">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>แจ้งปัญหาการทำงาน</h3>
+                    <p>แจ้งปัญหาที่พบระหว่างการทำงานเพื่อให้ทีมงานช่วยแก้ไข</p>
+                    <a href="#issue-form" class="btn">แจ้งปัญหา</a>
+                </div>
+                
+                <div class="portal-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>ตารางงาน</h3>
+                    <p>ตรวจสอบตารางการทำงานและกำหนดการส่งมอบสินค้า</p>
+                    <a href="#" class="btn btn-disabled">เข้าสู่ระบบ</a>
+                </div>
+                
+                <div class="portal-card">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>เอกสารสำคัญ</h3>
+                    <p>เข้าถึงแบบฟอร์มและเอกสารสำคัญสำหรับพนักงาน</p>
+                    <a href="#" class="btn btn-disabled">เข้าสู่ระบบ</a>
+                </div>
+                
+                <div class="portal-card">
+                    <i class="fas fa-user-circle"></i>
+                    <h3>ข้อมูลส่วนตัว</h3>
+                    <p>จัดการข้อมูลส่วนตัวและการตั้งค่าบัญชีของคุณ</p>
+                    <a href="#" class="btn btn-disabled">เข้าสู่ระบบ</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="issue-report" id="issue-form">
+        <div class="container">
+            <h2 class="section-title">แบบฟอร์มแจ้งปัญหา</h2>
+            <p class="form-subtitle">กรุณากรอกรายละเอียดปัญหาที่พบระหว่างการทำงาน เพื่อให้ทีมงานสามารถช่วยแก้ไขได้อย่างรวดเร็ว</p>
+            
+            <form id="employee-issue-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="employee-id">รหัสพนักงาน <span class="required">*</span></label>
+                        <input type="text" id="employee-id" name="employee-id" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="employee-name">ชื่อ-นามสกุล <span class="required">*</span></label>
+                        <input type="text" id="employee-name" name="employee-name" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="department">แผนก <span class="required">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="">เลือกแผนก</option>
+                            <option value="ขนส่ง">ขนส่ง</option>
+                            <option value="คลังสินค้า">คลังสินค้า</option>
+                            <option value="ลูกค้าสัมพันธ์">ลูกค้าสัมพันธ์</option>
+                            <option value="พิธีการศุลกากร">พิธีการศุลกากร</option>
+                            <option value="บัญชีและการเงิน">บัญชีและการเงิน</option>
+                            <option value="ทรัพยากรบุคคล">ทรัพยากรบุคคล</option>
+                            <option value="ไอที">ไอที</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="issue-type">ประเภทปัญหา <span class="required">*</span></label>
+                        <select id="issue-type" name="issue-type" required>
+                            <option value="">เลือกประเภทปัญหา</option>
+                            <option value="อุปกรณ์/เครื่องมือ">อุปกรณ์/เครื่องมือ</option>
+                            <option value="ระบบ IT">ระบบ IT</option>
+                            <option value="ยานพาหนะ">ยานพาหนะ</option>
+                            <option value="กระบวนการทำงาน">กระบวนการทำงาน</option>
+                            <option value="ความปลอดภัย">ความปลอดภัย</option>
+                            <option value="สวัสดิการ">สวัสดิการ</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue-title">หัวข้อปัญหา <span class="required">*</span></label>
+                    <input type="text" id="issue-title" name="issue-title" placeholder="ระบุหัวข้อปัญหาสั้นๆ" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue-description">รายละเอียดปัญหา <span class="required">*</span></label>
+                    <textarea id="issue-description" name="issue-description" placeholder="อธิบายรายละเอียดของปัญหาที่พบ" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue-location">สถานที่เกิดปัญหา <span class="required">*</span></label>
+                    <input type="text" id="issue-location" name="issue-location" placeholder="ระบุสถานที่ที่พบปัญหา" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue-date">วันที่พบปัญหา <span class="required">*</span></label>
+                    <input type="date" id="issue-date" name="issue-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue-image">แนบรูปภาพ (ถ้ามี)</label>
+                    <input type="file" id="issue-image" name="issue-image" accept="image/*" multiple>
+                    <small>สามารถแนบไฟล์ได้สูงสุด 3 ไฟล์ (ขนาดไม่เกิน 5MB ต่อไฟล์)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue-urgency">ระดับความเร่งด่วน <span class="required">*</span></label>
+                    <select id="issue-urgency" name="issue-urgency" required>
+                        <option value="">เลือกระดับความเร่งด่วน</option>
+                        <option value="ต่ำ">ต่ำ - สามารถรอได้</option>
+                        <option value="ปานกลาง">ปานกลาง - ควรได้รับการแก้ไขภายใน 1-2 วัน</option>
+                        <option value="สูง">สูง - ต้องได้รับการแก้ไขภายใน 24 ชั่วโมง</option>
+                        <option value="ฉุกเฉิน">ฉุกเฉิน - ต้องได้รับการแก้ไขทันที</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="suggested-solution">ข้อเสนอแนะในการแก้ไข (ถ้ามี)</label>
+                    <textarea id="suggested-solution" name="suggested-solution" placeholder="หากคุณมีข้อเสนอแนะในการแก้ไขปัญหา กรุณาระบุ"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="confirm-info" name="confirm-info" required>
+                        <span>ข้าพเจ้าขอรับรองว่าข้อมูลที่ให้เป็นความจริงทุกประการ <span class="required">*</span></span>
+                    </label>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">ส่งแบบฟอร์ม</button>
+                    <button type="reset" class="btn btn-secondary">ล้างข้อมูล</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="issue-status">
+        <div class="container">
+            <h2 class="section-title">ตรวจสอบสถานะการแจ้งปัญหา</h2>
+            <p class="form-subtitle">ตรวจสอบสถานะของปัญหาที่คุณได้แจ้งไว้</p>
+            
+            <div class="status-check-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ticket-id">หมายเลขติดตาม</label>
+                        <input type="text" id="ticket-id" name="ticket-id" placeholder="กรอกหมายเลขติดตามของคุณ">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="employee-id-check">รหัสพนักงาน</label>
+                        <input type="text" id="employee-id-check" name="employee-id-check" placeholder="กรอกรหัสพนักงานของคุณ">
+                    </div>
+                    
+                    <div class="form-buttons status-check-button">
+                        <button type="button" class="btn btn-primary">ตรวจสอบสถานะ</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-result" style="display: none;">
+                <!-- ผลลัพธ์การตรวจสอบสถานะจะแสดงที่นี่ -->
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>KSP THAI LOGISTICS CO., LTD</h3>
+                    <p>บริการโลจิสติกส์ครบวงจร เพื่อตอบสนองทุกความต้องการของธุรกิจคุณ</p>
+                </div>
+                <div class="footer-section">
+                    <h3>ติดต่อเรา</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 3656/8 ชั้น 3 ส่วน 2 อาคารกรีนทาวเวอร์</p>
+                    <p>ถนนพระราม 4 แขวงคลองตัน เขตคลองเตย</p>
+                    <p>กรุงเทพมหานคร 10110</p>
+                    <p><i class="fas fa-phone"></i> 02-778-6522</p>
+                    <p><i class="fas fa-mobile-alt"></i> 084-333-7411 (โทรมือถือ)</p>
+                    <p><i class="fas fa-envelope"></i> info@kspthai-logistics.com</p>
+                </div>
+                <div class="footer-section">
+                    <h3>เมนูหลัก</h3>
+                    <ul>
+                        <li><a href="index.html">หน้าหลัก</a></li>
+                        <li><a href="about.html">เกี่ยวกับเรา</a></li>
+                        <li><a href="services.html">บริการ</a></li>
+                        <li><a href="careers.html">ร่วมงานกับเรา</a></li>
+                        <li><a href="contact.html">ติดต่อเรา</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>ติดตามเรา</h3>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-line"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2020 KSP THAI LOGISTICS CO., LTD. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

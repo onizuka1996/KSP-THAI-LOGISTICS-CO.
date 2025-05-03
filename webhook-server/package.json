@@ -1,0 +1,23 @@
+{
+  "name": "telegram-webhook-server",
+  "version": "1.0.0",
+  "description": "เซิร์ฟเวอร์สำหรับรับไฟล์และส่งต่อไปยัง Telegram API",
+  "main": "telegram-webhook.js",
+  "scripts": {
+    "start": "node telegram-webhook.js",
+    "dev": "nodemon telegram-webhook.js"
+  },
+  "author": "KSP Thai Logistics",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "axios": "^1.6.2",
+    "form-data": "^4.0.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

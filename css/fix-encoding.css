@@ -1,0 +1,26 @@
+/* ระบุการแสดงผลภาษาไทยให้ถูกต้อง */
+@charset "UTF-8";
+
+/* เพิ่มไฟล์ Thai font แบบ local หากต้องการความเสถียรมากขึ้น */
+@font-face {
+    font-family: 'Kanit';
+    src: local('Kanit'), url('https://fonts.gstatic.com/s/kanit/v12/nKKZ-Go6G5tXcraVGwCKd6xBDFs.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    unicode-range: U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+
+/* แก้ไขปัญหาตัวอักษรภาษาไทยแสดงเป็นโค้ด */
+body, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, select, li, td, th {
+    font-family: 'Kanit', sans-serif !important;
+}
+
+.footer-section h3,
+.footer-section p,
+.footer-section ul li a,
+.footer-section div,
+.footer-bottom p {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
