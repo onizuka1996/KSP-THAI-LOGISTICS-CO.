@@ -2,8 +2,8 @@
 
 // กำหนดค่า Telegram Bot Token และ Chat ID
 // ต้องสร้าง Bot ใน Telegram ผ่าน BotFather และรับ Token มาใส่ที่นี่
-const TELEGRAM_BOT_TOKEN = '6971329632:AAHo7hJ2uZDKIGnH4tBl3AoNHH-kezjRtik'; // เปลี่ยนเป็น Token ของคุณ
-const TELEGRAM_CHAT_ID = '1022465378';     // เปลี่ยนเป็น Chat ID ของคุณ
+const TELEGRAM_BOT_TOKEN = '7992354555:AAFm96-DSMUK9ayG7f92xwCIfxMcmnAF_hE'; // เปลี่ยนเป็น Token ของคุณ
+const TELEGRAM_CHAT_ID = '7596659509';     // เปลี่ยนเป็น Chat ID ของคุณ
 
 // เซิร์ฟเวอร์สำหรับส่งไฟล์ไปยัง Telegram (webhook server)
 const WEBHOOK_SERVER = 'http://localhost:3000/forward-to-telegram';
