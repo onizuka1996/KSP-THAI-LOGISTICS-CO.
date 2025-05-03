@@ -2,8 +2,8 @@
 
 // กำหนดค่า Telegram Bot Token และ Chat ID
 // ต้องสร้าง Bot ใน Telegram ผ่าน BotFather และรับ Token มาใส่ที่นี่
-const TELEGRAM_BOT_TOKEN = '6971329632:AAHo7hJ2uZDKIGnH4tBl3AoNHH-kezjRtik'; // เปลี่ยนเป็น Token ของคุณ
-const TELEGRAM_CHAT_ID = '1022465378';     // เปลี่ยนเป็น Chat ID ของคุณ
+const TELEGRAM_BOT_TOKEN = '7992354555:AAFm96-DSMUK9ayG7f92xwCIfxMcmnAF_hE'; // เปลี่ยนเป็น Token ของคุณ
+const TELEGRAM_CHAT_ID = '7596659509';     // เปลี่ยนเป็น Chat ID ของคุณ
 
 // ฟังก์ชันสำหรับการส่งข้อความไปยัง Telegram
 async function sendToTelegram(message) {
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                     // แสดงข้อความสำเร็จ
-                    alert('ส่งใบสมัครงานสำเร็จ! ขอบคุณสำหรับการสมัคร เราจะติดต่อกลับโดยเร็วที่สุด');
+                    alert('ส่งใบสมัครงานสำเร็จ! ข้อมูลของคุณได้ถูกส่งไปยังทีมรับสมัครของเราเรียบร้อยแล้ว เราจะติดต่อกลับภายใน 3 วันทำการ');
                     
                     // รีเซ็ตฟอร์ม
                     jobApplicationForm.reset();
@@ -252,8 +252,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch(error => {
                     console.error('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Telegram:', error);
                     
-                    // แสดงข้อความผิดพลาด
-                    alert('เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้งหรือติดต่อเราโดยตรง');
+                    // บันทึกข้อมูลลงไฟล์สำรองแม้ว่าส่งไปยัง Telegram จะล้มเหลว
+                    try {
+                        // สร้างข้อมูล JSON จาก FormData
+                        const formDataObj = {};
+                        formData.forEach((value, key) => {
+                            formDataObj[key] = value;
+                        });
+                        
+                        // เพิ่มข้อมูลเกี่ยวกับเวลาที่ส่ง
+                        formDataObj.timestamp = new Date().toISOString();
+                        formDataObj.errorInfo = error.message;
+                        
+                        // สร้างข้อความสำหรับบันทึก
+                        const logEntry = JSON.stringify(formDataObj, null, 2);
+                        console.log('สร้างล็อกสำรอง:', logEntry);
+                        
+                        // บันทึกข้อมูลใน localStorage เพื่อเป็นสำรอง
+                        const backupKey = 'application_backup_' + new Date().getTime();
+                        localStorage.setItem(backupKey, logEntry);
+                        console.log('บันทึกข้อมูลสำรองเรียบร้อยแล้ว - ' + backupKey);
+                    } catch (backupError) {
+                        console.error('ไม่สามารถบันทึกข้อมูลสำรอง:', backupError);
+                    }
+                    
+                    // แสดงข้อความผิดพลาดแต่บอกว่าข้อมูลถูกบันทึกแล้ว
+                    alert('ข้อมูลของคุณถูกบันทึกไว้แล้ว แต่พบปัญหาในการส่งไปยังทีมงาน กรุณาติดต่อเบอร์โทร 02-778-6522 เพื่อแจ้งว่าคุณได้ส่งใบสมัครแล้วแต่มีข้อผิดพลาดทางเทคนิค');
                 })
                 .finally(() => {
                     // คืนค่าปุ่มกลับเป็นปกติ
