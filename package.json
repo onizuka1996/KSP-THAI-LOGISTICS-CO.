@@ -1,0 +1,20 @@
+{
+  "name": "ksp-thai-logistics",
+  "version": "1.0.0",
+  "description": "KSP Thai Logistics Company Website",
+  "main": "telegram-webhook-server.js",
+  "scripts": {
+    "start": "node telegram-webhook-server.js",
+    "dev": "nodemon telegram-webhook-server.js"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "form-data": "^4.0.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

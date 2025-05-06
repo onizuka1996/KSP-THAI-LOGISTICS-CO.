@@ -5,11 +5,14 @@
 const TELEGRAM_BOT_TOKEN = '7992354555:AAFm96-DSMUK9ayG7f92xwCIfxMcmnAF_hE'; // เปลี่ยนเป็น Token ของคุณ
 const TELEGRAM_CHAT_ID = '7596659509';     // เปลี่ยนเป็น Chat ID ของคุณ
 
+// เซิร์ฟเวอร์สำหรับส่งไฟล์ไปยัง Telegram (webhook server)
+const WEBHOOK_SERVER = 'http://localhost:3000/forward-to-telegram';
+
 // ฟังก์ชันสำหรับการส่งข้อความไปยัง Telegram
 async function sendToTelegram(message) {
     try {
-        console.log('กำลังส่งข้อมูลไปยัง Telegram:', message.substring(0, 100) + '...');
-        console.log('Token:', TELEGRAM_BOT_TOKEN.substring(0, 10) + '...');
+        console.log('กำลังส่งข้อมูลไปยัง Telegram:', message);
+        console.log('Token:', TELEGRAM_BOT_TOKEN);
         console.log('Chat ID:', TELEGRAM_CHAT_ID);
         
         // ตรวจสอบ token และ chat_id
@@ -23,7 +26,6 @@ async function sendToTelegram(message) {
 
         // URL สำหรับ Telegram Bot API
         const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-        console.log('กำลังส่งไปยัง URL:', telegramApiUrl);
         
         // ข้อมูลที่จะส่งไปยัง Telegram
         const data = {
@@ -32,40 +34,23 @@ async function sendToTelegram(message) {
             parse_mode: 'HTML'
         };
         
-        console.log('ข้อมูลที่จะส่ง: chat_id=' + TELEGRAM_CHAT_ID + ', ความยาวข้อความ=' + message.length + ' ตัวอักษร');
+        // ส่งข้อมูลด้วย fetch API
+        const response = await fetch(telegramApiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
         
-        // ทำให้แน่ใจว่ามีการส่งข้อมูลจริงๆ
-        try {
-            // ส่งข้อมูลด้วย fetch API
-            console.log('กำลังเริ่ม fetch ไปยัง Telegram API');
-            const response = await fetch(telegramApiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-            
-            console.log('ได้รับการตอบกลับ HTTP Status:', response.status);
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Telegram API error:', errorText);
-                throw new Error(`HTTP error ${response.status}: ${errorText}`);
-            }
-            
-            const responseData = await response.json();
-            console.log('ข้อมูลตอบกลับจาก Telegram:', JSON.stringify(responseData));
-            
-            if (!responseData.ok) {
-                throw new Error(`Telegram API รายงานว่าเกิดข้อผิดพลาด: ${responseData.description}`);
-            }
-            
-            return responseData;
-        } catch (fetchError) {
-            console.error('Fetch error:', fetchError);
-            throw new Error(`ไม่สามารถเชื่อมต่อกับ Telegram API ได้: ${fetchError.message}`);
+        const responseData = await response.json();
+        console.log('ข้อมูลตอบกลับจาก Telegram:', responseData);
+        
+        if (!response.ok) {
+            throw new Error(`ไม่สามารถส่งข้อมูลไปยัง Telegram ได้: ${responseData.description || response.statusText}`);
         }
+        
+        return responseData;
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Telegram:', error);
         // แสดง alert เพื่อให้ผู้ใช้รู้ว่ามีข้อผิดพลาด
@@ -74,54 +59,87 @@ async function sendToTelegram(message) {
     }
 }
 
-// ฟังก์ชันส่งไฟล์ไปยัง Telegram โดยตรงผ่าน Telegram Bot API
+// ฟังก์ชันส่งไฟล์ไปยัง Telegram ผ่าน webhook server
 async function sendFileToTelegram(file, caption) {
     try {
-        console.log('กำลังส่งข้อมูลไฟล์ไปยัง Telegram:', file.name);
+        // สร้าง FormData สำหรับส่งไปยัง webhook server
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('token', TELEGRAM_BOT_TOKEN);
+        formData.append('chat_id', TELEGRAM_CHAT_ID);
+        formData.append('caption', caption || '');
         
-        // ตรวจสอบว่ามีไฟล์หรือไม่
-        if (!file) {
-            throw new Error('ไม่พบไฟล์');
-        }
+        // ส่งไปยัง webhook server
+        const response = await fetch(WEBHOOK_SERVER, {
+            method: 'POST',
+            body: formData
+        });
         
-        // ตรวจสอบขนาดไฟล์ (Telegram มีขีดจำกัด 50MB)
-        if (file.size > 50 * 1024 * 1024) {
-            throw new Error('ไฟล์มีขนาดใหญ่เกินไป (มากกว่า 50MB)');
-        }
-        
-        // เนื่องจากเบราว์เซอร์ไม่สามารถส่งไฟล์โดยตรงไปยัง Telegram API ได้ (CORS issues)
-        // เราจะส่งเฉพาะข้อมูลเกี่ยวกับไฟล์ไปแทน
-        const fileInfo = `
-- ชื่อไฟล์: ${file.name}
-- ขนาด: ${(file.size / 1024).toFixed(2)} KB
-- ประเภท: ${file.type}`;
-        
-        // สร้างข้อความที่จะส่งไปยัง Telegram
-        const message = `${caption || 'ไฟล์'}${fileInfo}
+        if (!response.ok) {
+            // หากไม่สามารถส่งไฟล์ได้ ให้ส่งข้อความแจ้งรายละเอียดไฟล์แทน
+            const errorData = await response.json();
+            console.error('ไม่สามารถส่งไฟล์ไปยัง Telegram ได้:', errorData);
+            
+            // สร้างข้อความแจ้งรายละเอียดไฟล์แทน
+            const fileInfo = {
+                name: file.name,
+                size: (file.size / 1024).toFixed(2) + ' KB',
+                type: file.type,
+                lastModified: new Date(file.lastModified).toLocaleString('th-TH')
+            };
+            
+            let fileMessage = `<b>ข้อมูลไฟล์:</b> ${caption}
 
-หมายเหตุ: ไฟล์จะถูกจัดเก็บในแบบฟอร์ม กรุณาติดต่อผู้สมัครเพื่อขอไฟล์`;
+`;
+            fileMessage += `<b>ชื่อไฟล์:</b> ${fileInfo.name}
+`;
+            fileMessage += `<b>ขนาด:</b> ${fileInfo.size}
+`;
+            fileMessage += `<b>ประเภท:</b> ${fileInfo.type}
+`;
+            fileMessage += `<b>แก้ไขล่าสุด:</b> ${fileInfo.lastModified}
+
+`;
+            fileMessage += `<i>หมายเหตุ: ไม่สามารถส่งไฟล์ไปยัง Telegram ได้ โปรดตรวจสอบว่า webhook server กำลังทำงานหรือไม่</i>`;
+            
+            return sendToTelegram(fileMessage);
+        }
         
-        // ส่งข้อความเกี่ยวกับไฟล์ไปแทนการส่งไฟล์จริง
-        await sendToTelegram(message);
+        const result = await response.json();
+        console.log('ส่งไฟล์ไปยัง Telegram สำเร็จ:', result);
+        return result;
         
-        console.log('ส่งข้อมูลไฟล์สำเร็จ');
-        return { success: true, message: 'ส่งข้อมูลไฟล์สำเร็จ' };
     } catch (error) {
-        console.error('เกิดข้อผิดพลาดในการส่งข้อมูลไฟล์:', error);
+        console.error('เกิดข้อผิดพลาดในการส่งไฟล์ไปยัง Telegram:', error);
         
-        // พยายามส่งข้อความแจ้งเตือนเกี่ยวกับข้อผิดพลาดไปยัง Telegram
+        // หากไม่สามารถส่งไฟล์ได้ ให้ส่งข้อความแจ้งรายละเอียดไฟล์แทน
         try {
-            if (file) {
-                const errorMessage = `ไม่สามารถส่งไฟล์ ${file.name} (${(file.size / 1024).toFixed(2)} KB)
+            const fileInfo = {
+                name: file.name,
+                size: (file.size / 1024).toFixed(2) + ' KB',
+                type: file.type,
+                lastModified: new Date(file.lastModified).toLocaleString('th-TH')
+            };
+            
+            let fileMessage = `<b>ข้อมูลไฟล์ (ไม่สามารถส่งไฟล์ได้):</b> ${caption}
 
-ข้อผิดพลาด: ${error.message}`;
-                await sendToTelegram(errorMessage);
-            }
+`;
+            fileMessage += `<b>ชื่อไฟล์:</b> ${fileInfo.name}
+`;
+            fileMessage += `<b>ขนาด:</b> ${fileInfo.size}
+`;
+            fileMessage += `<b>ประเภท:</b> ${fileInfo.type}
+`;
+            fileMessage += `<b>แก้ไขล่าสุด:</b> ${fileInfo.lastModified}
+
+`;
+            fileMessage += `<i>ข้อผิดพลาด: ${error.message}</i>`;
+            
+            return sendToTelegram(fileMessage);
         } catch (innerError) {
-            console.error('ไม่สามารถส่งข้อความแจ้งเตือน:', innerError);
+            console.error('เกิดข้อผิดพลาดซ้อน:', innerError);
+            throw error; // ส่งต่อ error เดิม
         }
-        
-        throw error;
     }
 }
 
